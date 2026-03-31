@@ -25,9 +25,12 @@ public class RateLimitingFilter extends OncePerRequestFilter {
     private static final int MAX_REQUESTS = 5;
     private static final long TIME_WINDOW_MS = 60_000;
 
+    private static final long CLEANUP_INTERVAL_MS = 300_000;
+
     private final ConcurrentHashMap<String, ConcurrentLinkedDeque<Long>> requestCounts =
             new ConcurrentHashMap<>();
     private final ObjectMapper objectMapper;
+    private volatile long lastCleanup = System.currentTimeMillis();
 
     public RateLimitingFilter(ObjectMapper objectMapper) {
         this.objectMapper = objectMapper;
@@ -65,7 +68,18 @@ public class RateLimitingFilter extends OncePerRequestFilter {
         }
 
         timestamps.addLast(now);
+        cleanupStaleEntries(now);
         filterChain.doFilter(request, response);
+    }
+
+    private void cleanupStaleEntries(long now) {
+        if (now - lastCleanup > CLEANUP_INTERVAL_MS) {
+            lastCleanup = now;
+            requestCounts.entrySet().removeIf(entry -> {
+                ConcurrentLinkedDeque<Long> ts = entry.getValue();
+                return ts.isEmpty() || ts.peekLast() < now - TIME_WINDOW_MS;
+            });
+        }
     }
 
     @Override
