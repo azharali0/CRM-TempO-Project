@@ -54,8 +54,8 @@ public class InteractionService {
         Interaction interaction = Interaction.builder()
                 .customer(customer)
                 .type(request.getType())
-                .subject(InputSanitizer.sanitize(request.getSubject()))
-                .notes(InputSanitizer.sanitize(request.getNotes()))
+                .subject(InputSanitizer.sanitizeOrNull(request.getSubject()))
+                .notes(InputSanitizer.sanitizeOrNull(request.getNotes()))
                 .duration(request.getDuration())
                 .loggedBy(currentUser)
                 .build();
@@ -126,10 +126,10 @@ public class InteractionService {
         }
 
         if (request.getSubject() != null) {
-            interaction.setSubject(InputSanitizer.sanitize(request.getSubject()));
+            interaction.setSubject(InputSanitizer.sanitizeOrNull(request.getSubject()));
         }
         if (request.getNotes() != null) {
-            interaction.setNotes(InputSanitizer.sanitize(request.getNotes()));
+            interaction.setNotes(InputSanitizer.sanitizeOrNull(request.getNotes()));
         }
         if (request.getDuration() != null) {
             interaction.setDuration(request.getDuration());
