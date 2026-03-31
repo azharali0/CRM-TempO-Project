@@ -1,0 +1,34 @@
+# Build artifacts
+target/
+*.class
+*.jar
+*.war
+
+# IDE
+.idea/
+.vscode/
+*.iml
+*.ipr
+*.iws
+.classpath
+.project
+.settings/
+out/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Environment
+.env
+.env.local
+
+# Uploads
+uploads/
+
+# Maven
+dependency-reduced-pom.xml
+buildNumber.properties
+
+# Logs
+*.log
