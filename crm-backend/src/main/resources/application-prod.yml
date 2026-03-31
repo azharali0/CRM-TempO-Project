@@ -1,0 +1,29 @@
+spring:
+  datasource:
+    hikari:
+      maximum-pool-size: 20
+      minimum-idle: 10
+
+  jpa:
+    show-sql: false
+
+  data:
+    redis:
+      password: ${REDIS_PASSWORD}
+
+logging:
+  level:
+    root: WARN
+    org.springframework.security: WARN
+    com.crm: INFO
+
+management:
+  endpoint:
+    health:
+      show-details: never
+
+server:
+  error:
+    include-message: never
+    include-stacktrace: never
+    include-binding-errors: never
