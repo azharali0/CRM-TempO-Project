@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<VBox spacing="15" styleClass="screen-container" alignment="CENTER"
+      xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.crm.desktop.controller.ImportController">
+
+    <padding>
+        <Insets top="30" right="30" bottom="30" left="30"/>
+    </padding>
+
+    <Label text="Import Customers" styleClass="screen-title"/>
+
+    <Label fx:id="statusLabel" text="Select a file to import." wrapText="true" maxWidth="400"/>
+
+    <HBox spacing="15" alignment="CENTER">
+        <Button fx:id="selectFileButton" text="Select File..." onAction="#handleSelectFile"
+                styleClass="secondary-button" prefWidth="150" prefHeight="35"/>
+        <Label fx:id="fileNameLabel" text="No file selected" styleClass="detail-label"/>
+    </HBox>
+
+    <ProgressBar fx:id="progressBar" maxWidth="400" prefHeight="20"/>
+    <ProgressIndicator fx:id="loadingSpinner" maxWidth="30" maxHeight="30"/>
+
+    <Button fx:id="importButton" text="Start Import" onAction="#handleImport"
+            styleClass="primary-button" prefWidth="200" prefHeight="35"/>
+
+    <Label fx:id="resultLabel" text="" wrapText="true" maxWidth="400"
+           styleClass="section-title"/>
+</VBox>

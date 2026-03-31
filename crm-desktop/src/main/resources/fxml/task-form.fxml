@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<VBox spacing="15" styleClass="screen-container"
+      xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.crm.desktop.controller.TaskFormController">
+
+    <padding>
+        <Insets top="20" right="20" bottom="20" left="20"/>
+    </padding>
+
+    <Label text="Task Form" styleClass="screen-title"/>
+    <ProgressIndicator fx:id="loadingSpinner" maxWidth="30" maxHeight="30"/>
+
+    <GridPane hgap="15" vgap="10" maxWidth="500">
+        <Label text="Title *" GridPane.columnIndex="0" GridPane.rowIndex="0"/>
+        <TextField fx:id="titleField" promptText="Task title"
+                   GridPane.columnIndex="1" GridPane.rowIndex="0" prefWidth="300"/>
+
+        <Label text="Description" GridPane.columnIndex="0" GridPane.rowIndex="1"/>
+        <TextArea fx:id="descriptionArea" promptText="Task description"
+                  GridPane.columnIndex="1" GridPane.rowIndex="1"
+                  prefWidth="300" prefHeight="80"/>
+
+        <Label text="Due Date *" GridPane.columnIndex="0" GridPane.rowIndex="2"/>
+        <DatePicker fx:id="dueDatePicker"
+                    GridPane.columnIndex="1" GridPane.rowIndex="2" prefWidth="300"/>
+
+        <Label text="Priority" GridPane.columnIndex="0" GridPane.rowIndex="3"/>
+        <ComboBox fx:id="priorityCombo"
+                  GridPane.columnIndex="1" GridPane.rowIndex="3" prefWidth="300"/>
+
+        <Label text="Assigned To (ID)" GridPane.columnIndex="0" GridPane.rowIndex="4"/>
+        <TextField fx:id="assignedToField" promptText="User UUID"
+                   GridPane.columnIndex="1" GridPane.rowIndex="4" prefWidth="300"/>
+
+        <Label text="Customer (ID)" GridPane.columnIndex="0" GridPane.rowIndex="5"/>
+        <TextField fx:id="customerIdField" promptText="Customer UUID"
+                   GridPane.columnIndex="1" GridPane.rowIndex="5" prefWidth="300"/>
+    </GridPane>
+
+    <Button fx:id="saveButton" text="Save Task" onAction="#handleSave"
+            styleClass="primary-button" prefWidth="200" prefHeight="35"/>
+</VBox>

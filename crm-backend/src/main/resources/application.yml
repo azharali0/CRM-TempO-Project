@@ -84,3 +84,16 @@ file:
 
 app:
   version: 1.0.0
+
+resilience4j:
+  circuitbreaker:
+    instances:
+      emailService:
+        registerHealthIndicator: true
+        slidingWindowSize: 10
+        minimumNumberOfCalls: 5
+        permittedNumberOfCallsInHalfOpenState: 3
+        automaticTransitionFromOpenToHalfOpenEnabled: true
+        waitDurationInOpenState: 30s
+        failureRateThreshold: 50
+        eventConsumerBufferSize: 10
