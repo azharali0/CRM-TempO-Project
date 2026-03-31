@@ -9,6 +9,7 @@ import com.crm.model.enums.LeadStage;
 import com.crm.model.enums.TaskStatus;
 import com.crm.model.enums.UserRole;
 import com.crm.repository.*;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -42,6 +43,7 @@ public class ReportService {
         this.userRepository = userRepository;
     }
 
+    @Cacheable(value = "dashboard", key = "#currentUser.id")
     @Transactional(readOnly = true)
     public DashboardDTO getDashboard(User currentUser) {
         long totalCustomers = countCustomers(currentUser);
@@ -60,6 +62,7 @@ public class ReportService {
                 .build();
     }
 
+    @Cacheable(value = "conversionReport", key = "#currentUser.id")
     @Transactional(readOnly = true)
     public ConversionReportDTO getConversionReport(User currentUser) {
         Map<String, Long> leadsPerStage = new LinkedHashMap<>();
@@ -114,6 +117,7 @@ public class ReportService {
                 .build();
     }
 
+    @Cacheable(value = "salesByRep", key = "#currentUser.id")
     @Transactional(readOnly = true)
     public List<SalesRepReportDTO> getSalesByRep(User currentUser) {
         if (currentUser.getRole() == UserRole.SALES_REP) {
@@ -159,6 +163,7 @@ public class ReportService {
         return results;
     }
 
+    @Cacheable(value = "monthlyTrend", key = "#currentUser.id")
     @Transactional(readOnly = true)
     public List<MonthlyTrendDTO> getMonthlyTrend(User currentUser) {
         LocalDateTime twelveMonthsAgo = YearMonth.now().minusMonths(11).atDay(1).atStartOfDay();
@@ -237,6 +242,7 @@ public class ReportService {
         return trends;
     }
 
+    @Cacheable(value = "activitySummary", key = "#currentUser.id")
     @Transactional(readOnly = true)
     public ActivitySummaryDTO getActivitySummary(User currentUser) {
         LocalDateTime now = LocalDateTime.now();

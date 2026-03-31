@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<VBox spacing="15" styleClass="screen-container"
+      xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.crm.desktop.controller.CustomerListController">
+
+    <padding>
+        <Insets top="20" right="20" bottom="20" left="20"/>
+    </padding>
+
+    <HBox alignment="CENTER_LEFT" spacing="10">
+        <Label text="Customers" styleClass="screen-title"/>
+        <Region HBox.hgrow="ALWAYS"/>
+        <TextField fx:id="searchField" promptText="Search by name..." prefWidth="200"/>
+        <Button text="Search" onAction="#handleSearch" styleClass="secondary-button"/>
+        <Button text="+ Add Customer" onAction="#handleAddCustomer" styleClass="primary-button"/>
+    </HBox>
+
+    <ProgressIndicator fx:id="loadingSpinner" maxWidth="30" maxHeight="30"/>
+
+    <TableView fx:id="customerTable" VBox.vgrow="ALWAYS">
+        <columns>
+            <TableColumn fx:id="nameColumn" text="Name" prefWidth="180"/>
+            <TableColumn fx:id="emailColumn" text="Email" prefWidth="200"/>
+            <TableColumn fx:id="phoneColumn" text="Phone" prefWidth="130"/>
+            <TableColumn fx:id="companyColumn" text="Company" prefWidth="160"/>
+            <TableColumn fx:id="statusColumn" text="Status" prefWidth="100"/>
+        </columns>
+    </TableView>
+
+    <HBox alignment="CENTER" spacing="10">
+        <Button text="← Previous" onAction="#handlePrevPage" styleClass="secondary-button"/>
+        <Label fx:id="pageLabel" text="Page 1 of 1"/>
+        <Button text="Next →" onAction="#handleNextPage" styleClass="secondary-button"/>
+    </HBox>
+</VBox>

@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<VBox spacing="15" styleClass="screen-container"
+      xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.crm.desktop.controller.LeadDetailController">
+
+    <padding>
+        <Insets top="20" right="20" bottom="20" left="20"/>
+    </padding>
+
+    <Label text="Lead Details" styleClass="screen-title"/>
+    <ProgressIndicator fx:id="loadingSpinner" maxWidth="30" maxHeight="30"/>
+
+    <GridPane hgap="15" vgap="10">
+        <Label text="Title:" GridPane.columnIndex="0" GridPane.rowIndex="0"
+               styleClass="detail-label"/>
+        <Label fx:id="titleLabel" GridPane.columnIndex="1" GridPane.rowIndex="0"/>
+
+        <Label text="Stage:" GridPane.columnIndex="0" GridPane.rowIndex="1"
+               styleClass="detail-label"/>
+        <Label fx:id="stageLabel" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+
+        <Label text="Value:" GridPane.columnIndex="0" GridPane.rowIndex="2"
+               styleClass="detail-label"/>
+        <Label fx:id="valueLabel" GridPane.columnIndex="1" GridPane.rowIndex="2"/>
+
+        <Label text="Probability:" GridPane.columnIndex="0" GridPane.rowIndex="3"
+               styleClass="detail-label"/>
+        <Label fx:id="probabilityLabel" GridPane.columnIndex="1" GridPane.rowIndex="3"/>
+
+        <Label text="Customer:" GridPane.columnIndex="0" GridPane.rowIndex="4"
+               styleClass="detail-label"/>
+        <Label fx:id="customerLabel" GridPane.columnIndex="1" GridPane.rowIndex="4"/>
+
+        <Label text="Owner:" GridPane.columnIndex="0" GridPane.rowIndex="5"
+               styleClass="detail-label"/>
+        <Label fx:id="ownerLabel" GridPane.columnIndex="1" GridPane.rowIndex="5"/>
+
+        <Label text="Expected Close:" GridPane.columnIndex="0" GridPane.rowIndex="6"
+               styleClass="detail-label"/>
+        <Label fx:id="expectedCloseLabel" GridPane.columnIndex="1" GridPane.rowIndex="6"/>
+
+        <Label text="Lost Reason:" GridPane.columnIndex="0" GridPane.rowIndex="7"
+               styleClass="detail-label"/>
+        <Label fx:id="lostReasonLabel" GridPane.columnIndex="1" GridPane.rowIndex="7"/>
+
+        <Label text="Created:" GridPane.columnIndex="0" GridPane.rowIndex="8"
+               styleClass="detail-label"/>
+        <Label fx:id="createdAtLabel" GridPane.columnIndex="1" GridPane.rowIndex="8"/>
+    </GridPane>
+
+    <Separator/>
+
+    <Label text="Customer Interactions" styleClass="section-title"/>
+    <ListView fx:id="interactionList" VBox.vgrow="ALWAYS" prefHeight="200"/>
+</VBox>

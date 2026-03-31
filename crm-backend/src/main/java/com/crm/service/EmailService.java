@@ -2,6 +2,7 @@ package com.crm.service;
 
 import com.crm.model.entity.EmailLog;
 import com.crm.repository.EmailLogRepository;
+import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.mail.SimpleMailMessage;
@@ -42,6 +43,7 @@ public class EmailService {
     }
 
     @Async("taskExecutor")
+    @CircuitBreaker(name = "emailService", fallbackMethod = "sendEmailFallback")
     public void sendEmail(String to, String subject, String body) {
         try {
             if (!mailAvailable) {
@@ -127,5 +129,14 @@ public class EmailService {
     private String truncate(String value, int maxLength) {
         if (value == null) return null;
         return value.length() > maxLength ? value.substring(0, maxLength) : value;
+    }
+
+    /**
+     * Circuit breaker fallback — logs failure when SMTP is completely unreachable.
+     */
+    @SuppressWarnings("unused")
+    private void sendEmailFallback(String to, String subject, String body, Throwable t) {
+        log.error("Circuit breaker OPEN for email service — subject: {}, error: {}", subject, t.getMessage());
+        logEmail(to, subject, "FAILED", "Circuit breaker open: " + t.getMessage());
     }
 }

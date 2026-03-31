@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<VBox spacing="20" styleClass="screen-container"
+      xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.crm.desktop.controller.DashboardController">
+
+    <padding>
+        <Insets top="20" right="20" bottom="20" left="20"/>
+    </padding>
+
+    <HBox alignment="CENTER_LEFT" spacing="10">
+        <Label fx:id="welcomeLabel" styleClass="screen-title"/>
+        <Region HBox.hgrow="ALWAYS"/>
+        <Button text="⟳ Refresh" onAction="#handleRefresh" styleClass="secondary-button"/>
+    </HBox>
+
+    <ProgressIndicator fx:id="loadingSpinner" maxWidth="30" maxHeight="30"/>
+
+    <!-- KPI Cards -->
+    <HBox spacing="20" alignment="CENTER">
+        <VBox alignment="CENTER" spacing="5" styleClass="kpi-card">
+            <Label text="Total Customers" styleClass="kpi-title"/>
+            <Label fx:id="totalCustomersLabel" text="0" styleClass="kpi-value"/>
+        </VBox>
+        <VBox alignment="CENTER" spacing="5" styleClass="kpi-card">
+            <Label text="Active Leads" styleClass="kpi-title"/>
+            <Label fx:id="activeLeadsLabel" text="0" styleClass="kpi-value"/>
+        </VBox>
+        <VBox alignment="CENTER" spacing="5" styleClass="kpi-card">
+            <Label text="Pending Tasks" styleClass="kpi-title"/>
+            <Label fx:id="pendingTasksLabel" text="0" styleClass="kpi-value"/>
+        </VBox>
+        <VBox alignment="CENTER" spacing="5" styleClass="kpi-card">
+            <Label text="Won Deals" styleClass="kpi-title"/>
+            <Label fx:id="wonDealsLabel" text="0" styleClass="kpi-value"/>
+        </VBox>
+    </HBox>
+
+    <HBox spacing="20" alignment="CENTER">
+        <VBox alignment="CENTER" spacing="5" styleClass="kpi-card">
+            <Label text="Conversion Rate" styleClass="kpi-title"/>
+            <Label fx:id="conversionRateLabel" text="0%" styleClass="kpi-value-green"/>
+        </VBox>
+        <VBox alignment="CENTER" spacing="5" styleClass="kpi-card">
+            <Label text="Total Revenue" styleClass="kpi-title"/>
+            <Label fx:id="revenueLabel" text="$0" styleClass="kpi-value-green"/>
+        </VBox>
+    </HBox>
+</VBox>
