@@ -135,12 +135,7 @@ public class ReportService {
             long dealsWon = (Long) row[2];
             BigDecimal totalValue = (BigDecimal) row[3];
 
-            long totalLeadsByRep;
-            if (currentUser.getRole() == UserRole.ADMIN) {
-                totalLeadsByRep = leadRepository.countByOwnerId(repId);
-            } else {
-                totalLeadsByRep = leadRepository.countByOwnerId(repId);
-            }
+            long totalLeadsByRep = leadRepository.countByOwnerId(repId);
 
             BigDecimal repWinRate;
             if (totalLeadsByRep == 0) {
