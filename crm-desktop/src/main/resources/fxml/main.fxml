@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<BorderPane fx:id="rootPane" styleClass="main-window"
+            xmlns:fx="http://javafx.com/fxml"
+            fx:controller="com.crm.desktop.controller.MainController">
+
+    <!-- Top bar -->
+    <top>
+        <HBox alignment="CENTER_LEFT" spacing="15" styleClass="top-bar">
+            <padding>
+                <Insets top="10" right="20" bottom="10" left="20"/>
+            </padding>
+            <Label text="CRM Desktop" styleClass="app-title-small"/>
+            <Region HBox.hgrow="ALWAYS"/>
+            <Label fx:id="userNameLabel" styleClass="user-name"/>
+            <Label fx:id="userRoleLabel" styleClass="role-badge"/>
+            <StackPane>
+                <Button text="🔔" styleClass="icon-button"/>
+                <Label fx:id="notificationBadge" styleClass="notification-badge"/>
+            </StackPane>
+            <Button fx:id="logoutButton" text="Logout" onAction="#handleLogout"
+                    styleClass="logout-button"/>
+        </HBox>
+    </top>
+
+    <!-- Sidebar -->
+    <left>
+        <VBox fx:id="sidebar" spacing="5" styleClass="sidebar" prefWidth="200">
+            <padding>
+                <Insets top="15" right="10" bottom="15" left="10"/>
+            </padding>
+            <Button text="📊  Dashboard" onAction="#showDashboard"
+                    styleClass="nav-button" maxWidth="Infinity"/>
+            <Button text="👥  Customers" onAction="#showCustomers"
+                    styleClass="nav-button" maxWidth="Infinity"/>
+            <Button text="📈  Leads" onAction="#showLeads"
+                    styleClass="nav-button" maxWidth="Infinity"/>
+            <Button text="✅  Tasks" onAction="#showTasks"
+                    styleClass="nav-button" maxWidth="Infinity"/>
+            <Button text="📋  Reports" onAction="#showReports"
+                    styleClass="nav-button" maxWidth="Infinity"/>
+        </VBox>
+    </left>
+
+    <!-- Content area — screens are loaded here dynamically -->
+    <center>
+        <StackPane styleClass="content-area">
+            <Label text="Loading..." style="-fx-text-fill: #888;"/>
+        </StackPane>
+    </center>
+</BorderPane>

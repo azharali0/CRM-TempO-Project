@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<VBox alignment="CENTER" spacing="20" styleClass="login-container"
+      xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.crm.desktop.controller.LoginController">
+
+    <padding>
+        <Insets top="50" right="50" bottom="50" left="50"/>
+    </padding>
+
+    <Label text="CRM Desktop" styleClass="app-title"/>
+    <Label text="Sign in to your account" styleClass="subtitle"/>
+
+    <VBox spacing="8" alignment="CENTER_LEFT" maxWidth="300">
+        <Label text="Email"/>
+        <TextField fx:id="emailField" promptText="email@company.com" maxWidth="300"/>
+
+        <Label text="Password"/>
+        <PasswordField fx:id="passwordField" promptText="••••••••" maxWidth="300"/>
+    </VBox>
+
+    <Label fx:id="errorLabel" styleClass="error-label" wrapText="true" maxWidth="300"/>
+
+    <ProgressIndicator fx:id="loadingSpinner" maxWidth="30" maxHeight="30"/>
+
+    <Button fx:id="loginButton" text="Login" onAction="#handleLogin"
+            styleClass="primary-button" maxWidth="300" prefHeight="35"/>
+</VBox>

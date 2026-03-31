@@ -1,6 +1,15 @@
-# CRM Desktop Application — Backend API
+# CRM Desktop Application
 
-A robust CRM desktop application backend using **Java 17**, **Spring Boot 3**, **PostgreSQL**, **Redis**, with JWT-based authentication, role-based access control, and RESTful APIs for managing customers, leads, tasks, and interactions.
+A robust CRM desktop application with a **Spring Boot 3** backend API and a **JavaFX 21** desktop GUI — using **Java 17**, **PostgreSQL**, **Redis**, JWT-based authentication, role-based access control, and RESTful APIs for managing customers, leads, tasks, and interactions.
+
+## Architecture
+
+| Module | Description |
+|--------|-------------|
+| **`crm-backend/`** | Spring Boot 3 REST API — business logic, database, security, email, PDF |
+| **`crm-desktop/`** | JavaFX 21 desktop GUI — login, sidebar navigation, customer/lead/task screens, dashboard, reports |
+
+The desktop app communicates with the backend via REST API using Java's built-in `HttpClient`. JWT tokens are stored **in memory only** (never written to disk). The backend can also be containerized with Docker Compose.
 
 ## Features
 
@@ -25,7 +34,8 @@ A robust CRM desktop application backend using **Java 17**, **Spring Boot 3**, *
 | Component | Technology |
 |-----------|------------|
 | Language | Java 17 |
-| Framework | Spring Boot 3.2.3 |
+| Backend Framework | Spring Boot 3.2.3 |
+| Desktop GUI | JavaFX 21 |
 | Security | Spring Security + JWT (JJWT 0.12.5) |
 | Database | PostgreSQL |
 | Cache | Redis |
@@ -35,9 +45,12 @@ A robust CRM desktop application backend using **Java 17**, **Spring Boot 3**, *
 | Excel | Apache POI 5.2.5 |
 | Audit | Spring AOP |
 | API Docs | SpringDoc OpenAPI (Swagger) |
+| JSON (Desktop) | Gson 2.10.1 |
+| HTTP Client | Java HttpClient (built-in) |
 | Testing | JUnit 5 + Mockito |
 | Build | Maven |
 | Container | Docker + Docker Compose |
+| Packaging | jpackage (.exe installer) |
 
 ## Roles & Access Control
 
@@ -87,12 +100,28 @@ cd crm-backend
 cp .env.example .env
 # Edit .env with your local settings
 
-# 4. Build and run
+# 4. Build and run backend
 mvn clean compile
 mvn spring-boot:run
 
-# Or run tests
+# Or run backend tests
 mvn test
+```
+
+### Option 3: Run the Desktop App
+
+```bash
+# Requires: backend running at http://localhost:8080
+
+cd crm-desktop
+mvn clean compile
+mvn javafx:run
+
+# Or run desktop tests
+mvn test
+
+# Build Windows .exe installer (Windows only)
+build-installer.bat
 ```
 
 ## API Endpoints
@@ -198,29 +227,70 @@ mvn test
 ## Project Structure
 
 ```
-crm-backend/
-├── src/main/java/com/crm/
-│   ├── config/          # Security, JWT, AOP, Filters
-│   ├── controller/      # REST API endpoints
-│   ├── dto/
-│   │   ├── request/     # Input DTOs
-│   │   └── response/    # Output DTOs
-│   ├── exception/       # Custom exceptions
-│   ├── model/
-│   │   ├── entity/      # JPA entities
-│   │   └── enums/       # Enumerations
-│   ├── repository/      # Data access layer
-│   ├── scheduler/       # Cron jobs
-│   ├── service/         # Business logic
-│   └── util/            # Utilities
-├── src/main/resources/
-│   ├── db/migration/    # Flyway migrations (V1-V10)
-│   ├── application.yml
-│   └── application-prod.yml
-├── src/test/java/       # Unit tests
-├── Dockerfile
-├── pom.xml
-└── .env.example
+CRM-TempO-Project/
+├── crm-backend/                        # Spring Boot REST API
+│   ├── src/main/java/com/crm/
+│   │   ├── config/                     # Security, JWT, AOP, Filters
+│   │   ├── controller/                 # REST API endpoints
+│   │   ├── dto/request/                # Input DTOs
+│   │   ├── dto/response/               # Output DTOs
+│   │   ├── exception/                  # Custom exceptions
+│   │   ├── model/entity/               # JPA entities
+│   │   ├── model/enums/                # Enumerations
+│   │   ├── repository/                 # Data access layer
+│   │   ├── scheduler/                  # Cron jobs
+│   │   ├── service/                    # Business logic
+│   │   └── util/                       # Utilities
+│   ├── src/main/resources/
+│   │   ├── db/migration/               # Flyway migrations (V1-V10)
+│   │   ├── application.yml
+│   │   └── application-prod.yml
+│   ├── src/test/java/                  # Backend unit tests
+│   ├── Dockerfile
+│   └── pom.xml
+│
+├── crm-desktop/                        # JavaFX 21 Desktop GUI
+│   ├── src/main/java/com/crm/desktop/
+│   │   ├── CrmDesktopApp.java          # Main entry point
+│   │   ├── api/                        # HTTP API clients (uses Java HttpClient)
+│   │   │   ├── ApiClient.java          # JWT-aware HTTP wrapper
+│   │   │   ├── AuthApi.java            # Login, register, refresh
+│   │   │   ├── CustomerApi.java        # Customer CRUD
+│   │   │   ├── LeadApi.java            # Lead pipeline
+│   │   │   ├── TaskApi.java            # Task management
+│   │   │   ├── InteractionApi.java     # Interaction logging
+│   │   │   ├── ReportApi.java          # Dashboard & reports
+│   │   │   ├── NotificationApi.java    # Notifications
+│   │   │   └── DocumentApi.java        # File download
+│   │   ├── controller/                 # FXML screen controllers
+│   │   │   ├── LoginController.java
+│   │   │   ├── MainController.java     # Sidebar + nav
+│   │   │   ├── CustomerListController.java
+│   │   │   ├── CustomerDetailController.java
+│   │   │   ├── CustomerFormController.java
+│   │   │   ├── LeadPipelineController.java
+│   │   │   ├── TaskListController.java
+│   │   │   ├── DashboardController.java
+│   │   │   └── ReportController.java
+│   │   ├── model/                      # Client-side data models
+│   │   ├── service/
+│   │   │   ├── SessionManager.java     # In-memory JWT + 15min idle timeout
+│   │   │   └── NotificationPoller.java # Background poll every 30s
+│   │   └── util/
+│   │       ├── Validator.java          # Client-side input validation
+│   │       ├── Formatter.java          # Currency, date, duration formatting
+│   │       └── AlertHelper.java        # Reusable dialogs
+│   ├── src/main/resources/
+│   │   ├── fxml/                       # FXML layouts (9 screens)
+│   │   ├── css/styles.css              # Application theme
+│   │   └── images/                     # Icons, splash
+│   ├── src/test/java/                  # Desktop unit tests
+│   ├── build-installer.bat             # jpackage .exe builder
+│   └── pom.xml
+│
+├── docker-compose.yml                  # App + PostgreSQL + Redis
+├── CRM-Project-Phases.md               # Project blueprint
+└── README.md
 ```
 
 ## Database Migrations
@@ -258,11 +328,16 @@ crm-backend/
 ## Running Tests
 
 ```bash
+# Backend tests (91 tests)
 cd crm-backend
+mvn test
+
+# Desktop tests
+cd crm-desktop
 mvn test
 ```
 
-Tests cover:
+### Backend Tests cover:
 - **AuthService**: Registration, login, lockout, JWT refresh
 - **CustomerService**: CRUD, role-based access, XSS sanitization, optimistic locking
 - **LeadService**: Stage transitions, validation rules, access control
@@ -272,6 +347,11 @@ Tests cover:
 - **InputSanitizer**: HTML stripping, XSS prevention
 - **CsvSanitizer**: Formula injection prevention
 - **FileValidator**: Magic-byte validation, path traversal, size limits
+
+### Desktop Tests cover:
+- **SessionManager**: Token storage, idle timeout, role checking
+- **Validator**: Email, phone, name, password, decimal validation
+- **Formatter**: Date, currency, number, duration formatting
 
 ## License
 

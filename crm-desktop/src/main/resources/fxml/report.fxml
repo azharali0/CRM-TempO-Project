@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.geometry.Insets?>
+
+<VBox spacing="15" styleClass="screen-container"
+      xmlns:fx="http://javafx.com/fxml"
+      fx:controller="com.crm.desktop.controller.ReportController">
+
+    <padding>
+        <Insets top="20" right="20" bottom="20" left="20"/>
+    </padding>
+
+    <HBox alignment="CENTER_LEFT" spacing="10">
+        <Label text="Reports" styleClass="screen-title"/>
+        <Region HBox.hgrow="ALWAYS"/>
+        <Button text="⟳ Refresh" onAction="#handleRefresh" styleClass="secondary-button"/>
+        <Button text="📄 Export PDF" onAction="#handleExportPdf" styleClass="primary-button"/>
+    </HBox>
+
+    <ProgressIndicator fx:id="loadingSpinner" maxWidth="30" maxHeight="30"/>
+
+    <!-- Conversion Rate -->
+    <VBox spacing="5" styleClass="kpi-card" maxWidth="250">
+        <Label text="Lead Conversion Rate" styleClass="kpi-title"/>
+        <Label fx:id="conversionLabel" text="0%" styleClass="kpi-value-green"/>
+    </VBox>
+
+    <!-- Sales by Rep -->
+    <Label text="Sales by Representative" styleClass="section-title"/>
+    <TableView fx:id="salesRepTable" VBox.vgrow="ALWAYS" prefHeight="300">
+        <columns>
+            <TableColumn fx:id="repNameColumn" text="Representative" prefWidth="200"/>
+            <TableColumn fx:id="repDealsColumn" text="Won Deals" prefWidth="120"/>
+            <TableColumn fx:id="repRevenueColumn" text="Revenue" prefWidth="150"/>
+        </columns>
+    </TableView>
+</VBox>
