@@ -20,4 +20,8 @@ public interface CustomerRepository extends JpaRepository<Customer, UUID>, JpaSp
     boolean existsByEmailAndIdNot(String email, UUID id);
 
     boolean existsByEmail(String email);
+
+    long countByAssignedToId(UUID userId);
+
+    long countByAssignedToIdIn(List<UUID> userIds);
 }
