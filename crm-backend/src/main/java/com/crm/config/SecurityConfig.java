@@ -44,9 +44,18 @@ public class SecurityConfig {
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .sessionManagement(session ->
                         session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .headers(headers -> headers
+                        .contentTypeOptions(contentType -> {}) // X-Content-Type-Options: nosniff
+                        .frameOptions(frame -> frame.deny()) // X-Frame-Options: DENY
+                        .httpStrictTransportSecurity(hsts -> hsts
+                                .includeSubDomains(true)
+                                .maxAgeInSeconds(31536000)) // HSTS
+                        .cacheControl(cache -> {}) // Cache-Control: no-store
+                        .contentSecurityPolicy(csp -> csp.policyDirectives("default-src 'self'")))
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("/api/auth/login", "/api/auth/register", "/api/auth/refresh").permitAll()
-                        .requestMatchers("/actuator/health").permitAll()
+                        .requestMatchers("/api/system/**").permitAll()
+                        .requestMatchers("/actuator/health", "/actuator/info").permitAll()
                         .requestMatchers("/swagger-ui/**", "/v3/api-docs/**", "/swagger-ui.html").permitAll()
                         .anyRequest().authenticated())
                 .addFilterBefore(rateLimitingFilter, UsernamePasswordAuthenticationFilter.class)

@@ -9,12 +9,12 @@ spring:
 
   data:
     redis:
-      password: ${REDIS_PASSWORD}
+      password: ${REDIS_PASSWORD:}
 
 logging:
   level:
     root: WARN
-    org.springframework.security: WARN
+    org.springframework.security: INFO
     com.crm: INFO
 
 management:
@@ -27,3 +27,6 @@ server:
     include-message: never
     include-stacktrace: never
     include-binding-errors: never
+
+file:
+  upload-dir: ${FILE_UPLOAD_DIR:/var/crm/uploads}

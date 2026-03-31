@@ -149,6 +149,13 @@ public class CustomerService {
         return CustomerDetailDTO.fromEntity(saved);
     }
 
+    @Transactional(readOnly = true)
+    public Customer getCustomerEntityWithAccessCheck(UUID id, User currentUser) {
+        Customer customer = findCustomerOrThrow(id);
+        checkAccess(customer, currentUser);
+        return customer;
+    }
+
     @Transactional
     public void deleteCustomer(UUID id, User currentUser) {
         if (currentUser.getRole() != UserRole.ADMIN) {
