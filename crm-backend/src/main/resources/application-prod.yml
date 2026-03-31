@@ -9,12 +9,12 @@ spring:
 
   data:
     redis:
-      password: ${REDIS_PASSWORD:}
+      password: ${REDIS_PASSWORD}
 
 logging:
   level:
     root: WARN
-    org.springframework.security: INFO
+    org.springframework.security: WARN
     com.crm: INFO
 
 management:
