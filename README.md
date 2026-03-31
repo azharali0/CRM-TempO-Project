@@ -2,6 +2,8 @@
 
 A robust CRM desktop application with a **Spring Boot 3** backend API and a **JavaFX 21** desktop GUI — using **Java 17**, **PostgreSQL**, **Redis**, JWT-based authentication, role-based access control, and RESTful APIs for managing customers, leads, tasks, and interactions.
 
+> **📘 Full setup & deployment guide → [SETUP.md](SETUP.md)**
+
 ## Architecture
 
 | Module | Description |
@@ -78,11 +80,11 @@ git clone https://github.com/azharali0/CRM-TempO-Project.git
 cd CRM-TempO-Project
 
 # Create environment file
-cp crm-backend/.env.example .env
+cp .env.example .env
 # Edit .env with your settings (especially JWT_SECRET and DB_PASSWORD)
 
 # Start all services
-docker-compose up -d
+docker compose up -d
 
 # The API will be available at http://localhost:8080
 # Swagger docs at http://localhost:8080/swagger-ui.html
@@ -104,7 +106,7 @@ cp .env.example .env
 mvn clean compile
 mvn spring-boot:run
 
-# Or run backend tests
+# Or run backend tests (91 tests)
 mvn test
 ```
 
@@ -117,7 +119,7 @@ cd crm-desktop
 mvn clean compile
 mvn javafx:run
 
-# Or run desktop tests
+# Or run desktop tests (40 tests)
 mvn test
 
 # Build Windows .exe installer (Windows only)
@@ -230,29 +232,29 @@ build-installer.bat
 CRM-TempO-Project/
 ├── crm-backend/                        # Spring Boot REST API
 │   ├── src/main/java/com/crm/
-│   │   ├── config/                     # Security, JWT, AOP, Filters
-│   │   ├── controller/                 # REST API endpoints
-│   │   ├── dto/request/                # Input DTOs
-│   │   ├── dto/response/               # Output DTOs
-│   │   ├── exception/                  # Custom exceptions
-│   │   ├── model/entity/               # JPA entities
-│   │   ├── model/enums/                # Enumerations
-│   │   ├── repository/                 # Data access layer
-│   │   ├── scheduler/                  # Cron jobs
-│   │   ├── service/                    # Business logic
-│   │   └── util/                       # Utilities
+│   │   ├── config/                     # Security, JWT, Redis, AOP, Filters
+│   │   ├── controller/                 # REST API endpoints (10 controllers)
+│   │   ├── dto/request/                # Input DTOs (12)
+│   │   ├── dto/response/               # Output DTOs (16)
+│   │   ├── exception/                  # Custom exceptions + GlobalExceptionHandler
+│   │   ├── model/entity/               # JPA entities (10)
+│   │   ├── model/enums/                # Enumerations (6)
+│   │   ├── repository/                 # Data access layer + specifications
+│   │   ├── scheduler/                  # Cron jobs (overdue tasks, email reminders)
+│   │   ├── service/                    # Business logic (12 services)
+│   │   └── util/                       # InputSanitizer, CsvSanitizer, FileValidator
 │   ├── src/main/resources/
 │   │   ├── db/migration/               # Flyway migrations (V1-V10)
 │   │   ├── application.yml
 │   │   └── application-prod.yml
-│   ├── src/test/java/                  # Backend unit tests
-│   ├── Dockerfile
+│   ├── src/test/java/                  # 91 unit tests (9 test classes)
+│   ├── Dockerfile                      # Multi-stage Docker build
 │   └── pom.xml
 │
 ├── crm-desktop/                        # JavaFX 21 Desktop GUI
 │   ├── src/main/java/com/crm/desktop/
 │   │   ├── CrmDesktopApp.java          # Main entry point
-│   │   ├── api/                        # HTTP API clients (uses Java HttpClient)
+│   │   ├── api/                        # HTTP API clients (9 classes)
 │   │   │   ├── ApiClient.java          # JWT-aware HTTP wrapper
 │   │   │   ├── AuthApi.java            # Login, register, refresh
 │   │   │   ├── CustomerApi.java        # Customer CRUD
@@ -262,34 +264,42 @@ CRM-TempO-Project/
 │   │   │   ├── ReportApi.java          # Dashboard & reports
 │   │   │   ├── NotificationApi.java    # Notifications
 │   │   │   └── DocumentApi.java        # File download
-│   │   ├── controller/                 # FXML screen controllers
+│   │   ├── controller/                 # FXML screen controllers (13)
 │   │   │   ├── LoginController.java
 │   │   │   ├── MainController.java     # Sidebar + nav
 │   │   │   ├── CustomerListController.java
 │   │   │   ├── CustomerDetailController.java
 │   │   │   ├── CustomerFormController.java
 │   │   │   ├── LeadPipelineController.java
+│   │   │   ├── LeadDetailController.java
 │   │   │   ├── TaskListController.java
+│   │   │   ├── TaskFormController.java
+│   │   │   ├── InteractionTimelineController.java
 │   │   │   ├── DashboardController.java
-│   │   │   └── ReportController.java
+│   │   │   ├── ReportController.java
+│   │   │   └── ImportController.java
 │   │   ├── model/                      # Client-side data models
 │   │   ├── service/
 │   │   │   ├── SessionManager.java     # In-memory JWT + 15min idle timeout
-│   │   │   └── NotificationPoller.java # Background poll every 30s
+│   │   │   ├── NotificationPoller.java # Background poll every 30s
+│   │   │   └── DraftSaver.java         # Auto-save form drafts
 │   │   └── util/
 │   │       ├── Validator.java          # Client-side input validation
 │   │       ├── Formatter.java          # Currency, date, duration formatting
 │   │       └── AlertHelper.java        # Reusable dialogs
 │   ├── src/main/resources/
-│   │   ├── fxml/                       # FXML layouts (9 screens)
+│   │   ├── fxml/                       # FXML layouts (13 screens)
 │   │   ├── css/styles.css              # Application theme
 │   │   └── images/                     # Icons, splash
-│   ├── src/test/java/                  # Desktop unit tests
+│   ├── src/test/java/                  # 40 unit tests (4 test classes)
 │   ├── build-installer.bat             # jpackage .exe builder
 │   └── pom.xml
 │
+├── .github/workflows/ci.yml           # GitHub Actions CI pipeline
 ├── docker-compose.yml                  # App + PostgreSQL + Redis
-├── CRM-Project-Phases.md               # Project blueprint
+├── .env.example                        # Environment template for Docker
+├── SETUP.md                            # Step-by-step deployment guide
+├── CRM-Project-Phases.md               # Project blueprint (9 phases)
 └── README.md
 ```
 
@@ -332,26 +342,27 @@ CRM-TempO-Project/
 cd crm-backend
 mvn test
 
-# Desktop tests
+# Desktop tests (40 tests)
 cd crm-desktop
 mvn test
 ```
 
 ### Backend Tests cover:
-- **AuthService**: Registration, login, lockout, JWT refresh
-- **CustomerService**: CRUD, role-based access, XSS sanitization, optimistic locking
-- **LeadService**: Stage transitions, validation rules, access control
-- **TaskService**: Creation, completion, overdue detection
-- **InteractionService**: 24h edit window, rate limiting, immutability
-- **NotificationService**: Creation, read marking, access control
-- **InputSanitizer**: HTML stripping, XSS prevention
-- **CsvSanitizer**: Formula injection prevention
-- **FileValidator**: Magic-byte validation, path traversal, size limits
+- **AuthService** (10 tests): Registration, login, lockout, JWT refresh
+- **CustomerService** (14 tests): CRUD, role-based access, XSS sanitization, optimistic locking
+- **LeadService** (11 tests): Stage transitions, validation rules, access control
+- **TaskService** (7 tests): Creation, completion, overdue detection
+- **InteractionService** (8 tests): 24h edit window, rate limiting, immutability
+- **NotificationService** (5 tests): Creation, read marking, access control
+- **InputSanitizer** (10 tests): HTML stripping, XSS prevention
+- **CsvSanitizer** (12 tests): Formula injection prevention
+- **FileValidator** (14 tests): Magic-byte validation, path traversal, size limits
 
 ### Desktop Tests cover:
-- **SessionManager**: Token storage, idle timeout, role checking
-- **Validator**: Email, phone, name, password, decimal validation
-- **Formatter**: Date, currency, number, duration formatting
+- **SessionManager** (10 tests): Token storage, idle timeout, role checking
+- **Validator** (13 tests): Email, phone, name, password, decimal validation
+- **Formatter** (9 tests): Date, currency, number, duration formatting
+- **DraftSaver** (8 tests): Draft save, load, clear, lifecycle
 
 ## License
 
