@@ -43,7 +43,7 @@ public class CustomerListDTO {
         }
         String digits = phone.replaceAll("[^0-9]", "");
         if (digits.length() >= 7) {
-            return phone.substring(0, 4) + "***" + phone.substring(phone.length() - 4);
+            return digits.substring(0, 4) + "***" + digits.substring(digits.length() - 4);
         }
         return "***";
     }
