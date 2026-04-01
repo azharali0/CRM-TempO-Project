@@ -16,13 +16,17 @@ import com.crm.model.enums.UserRole;
 import com.crm.repository.CustomerRepository;
 import com.crm.repository.LeadRepository;
 import com.crm.repository.UserRepository;
+import com.crm.repository.specification.LeadSpecification;
 import com.crm.util.InputSanitizer;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -79,24 +83,65 @@ public class LeadService {
 
     @Transactional(readOnly = true)
     public Page<LeadDTO> getLeads(Pageable pageable, String stageFilter, User currentUser) {
+        return getLeads(pageable, stageFilter, null, null, null, null, null, null, null, null, null, currentUser);
+    }
+
+    @Transactional(readOnly = true)
+    public Page<LeadDTO> getLeads(Pageable pageable, String stageFilter, String title,
+                                   BigDecimal minValue, BigDecimal maxValue, Integer minProbability,
+                                   UUID customerId, LocalDate closeBefore, LocalDate closeAfter,
+                                   LocalDateTime from, LocalDateTime to, User currentUser) {
+        Specification<Lead> spec = buildRoleBasedSpec(currentUser);
+
         LeadStage stage = parseStageFilter(stageFilter);
+        if (stage != null) {
+            spec = spec.and(LeadSpecification.hasStage(stage));
+        }
+        if (title != null && !title.isBlank()) {
+            spec = spec.and(LeadSpecification.hasTitle(title));
+        }
+        if (minValue != null) {
+            spec = spec.and(LeadSpecification.hasMinValue(minValue));
+        }
+        if (maxValue != null) {
+            spec = spec.and(LeadSpecification.hasMaxValue(maxValue));
+        }
+        if (minProbability != null) {
+            spec = spec.and(LeadSpecification.hasMinProbability(minProbability));
+        }
+        if (customerId != null) {
+            spec = spec.and(LeadSpecification.hasCustomer(customerId));
+        }
+        if (closeBefore != null) {
+            spec = spec.and(LeadSpecification.expectedCloseBefore(closeBefore));
+        }
+        if (closeAfter != null) {
+            spec = spec.and(LeadSpecification.expectedCloseAfter(closeAfter));
+        }
+        if (from != null && to != null) {
+            spec = spec.and(LeadSpecification.createdBetween(from, to));
+        }
+
+        return leadRepository.findAll(spec, pageable).map(LeadDTO::fromEntity);
+    }
+
+    private Specification<Lead> buildRoleBasedSpec(User currentUser) {
+        Specification<Lead> spec = Specification.where(null);
 
         switch (currentUser.getRole()) {
             case ADMIN:
-                return stage != null
-                        ? leadRepository.findByStage(stage, pageable).map(LeadDTO::fromEntity)
-                        : leadRepository.findAll(pageable).map(LeadDTO::fromEntity);
+                break;
             case MANAGER:
                 List<UUID> visibleUserIds = getVisibleUserIds(currentUser);
-                return stage != null
-                        ? leadRepository.findByOwnerIdInAndStage(visibleUserIds, stage, pageable).map(LeadDTO::fromEntity)
-                        : leadRepository.findByOwnerIdIn(visibleUserIds, pageable).map(LeadDTO::fromEntity);
+                spec = spec.and(LeadSpecification.ownedByIn(visibleUserIds));
+                break;
             case SALES_REP:
             default:
-                return stage != null
-                        ? leadRepository.findByOwnerIdAndStage(currentUser.getId(), stage, pageable).map(LeadDTO::fromEntity)
-                        : leadRepository.findByOwnerId(currentUser.getId(), pageable).map(LeadDTO::fromEntity);
+                spec = spec.and(LeadSpecification.ownedBy(currentUser.getId()));
+                break;
         }
+
+        return spec;
     }
 
     @Transactional(readOnly = true)
