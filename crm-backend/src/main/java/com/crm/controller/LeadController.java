@@ -17,6 +17,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
+import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 @RestController
@@ -35,13 +38,23 @@ public class LeadController {
             @RequestParam(defaultValue = "20") int size,
             @RequestParam(required = false) String sort,
             @RequestParam(required = false) String stage,
+            @RequestParam(required = false) String title,
+            @RequestParam(required = false) BigDecimal minValue,
+            @RequestParam(required = false) BigDecimal maxValue,
+            @RequestParam(required = false) Integer minProbability,
+            @RequestParam(required = false) UUID customerId,
+            @RequestParam(required = false) LocalDate closeBefore,
+            @RequestParam(required = false) LocalDate closeAfter,
+            @RequestParam(required = false) LocalDateTime from,
+            @RequestParam(required = false) LocalDateTime to,
             Authentication authentication) {
 
         int clampedSize = Math.min(Math.max(size, 1), 100);
         Pageable pageable = buildPageable(page, clampedSize, sort);
         User currentUser = (User) authentication.getPrincipal();
 
-        Page<LeadDTO> leads = leadService.getLeads(pageable, stage, currentUser);
+        Page<LeadDTO> leads = leadService.getLeads(pageable, stage, title, minValue, maxValue,
+                minProbability, customerId, closeBefore, closeAfter, from, to, currentUser);
         return ResponseEntity.ok(ApiResponse.success("Leads retrieved successfully", leads));
     }
 
